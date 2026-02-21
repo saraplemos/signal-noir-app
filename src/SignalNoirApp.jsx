@@ -27,6 +27,12 @@ const PUBLISHED_CSV_URL = '';
 // https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_HERE/edit
 const SHEET_ID = '';
 
+// Data range: row 1 = headers, rows 2–30 = data (29 rows). All tabs use this range.
+const HEADER_ROW = 1;
+const DATA_FIRST_ROW = 2;
+const DATA_LAST_ROW = 30;
+const DATA_ROW_COUNT = DATA_LAST_ROW - DATA_FIRST_ROW + 1;
+
 const WEIGHTS = {
   authority: 0.25,
   aiCitations: 0.30,
@@ -54,6 +60,16 @@ const WEIGHT_PERCENTAGES = {
   social: '5%'
 };
 
+// Ordered list for tab navigation (1. Authority … 6. Social amplification)
+const SIGNAL_TABS = [
+  { key: 'authority', label: 'Authority', num: 1 },
+  { key: 'aiCitations', label: 'AI Citations', num: 2 },
+  { key: 'content', label: 'Content', num: 3 },
+  { key: 'topical', label: 'Topical', num: 4 },
+  { key: 'search', label: 'Search', num: 5 },
+  { key: 'social', label: 'Social amplification', num: 6 }
+];
+
 const calculateScore = (scores) => {
   return Object.keys(WEIGHTS).reduce((total, key) => {
     return total + (scores[key] || 0) * WEIGHTS[key];
@@ -74,6 +90,7 @@ const SignalNoirApp = () => {
   const [lastSync, setLastSync] = useState(null);
   const [connectionMode, setConnectionMode] = useState('not_configured'); // 'not_configured', 'readonly', 'readwrite'
   const [newPubName, setNewPubName] = useState('');
+  const [signalPage, setSignalPage] = useState(null); // null | 'authority' | 'aiCitations' | ...
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -127,12 +144,15 @@ const SignalNoirApp = () => {
         throw new Error(data.error);
       }
 
-      const pubs = data.data
-        .slice(0, 29) // Only rows 2-30 (29 data rows)
+      // Data range: row 1 = header, rows 2–30 = data. Skip header if present, then take up to 29 rows.
+      const rawRows = Array.isArray(data.data) ? data.data : [];
+      const skipHeader = rawRows.length > 0 && String((rawRows[0][0] || '')).toLowerCase() === 'publication';
+      const dataRows = (skipHeader ? rawRows.slice(1) : rawRows).slice(0, DATA_ROW_COUNT);
+      const pubs = dataRows
         .map((row, index) => ({
           id: index + 1,
           name: row[0],
-          row: index + 2, // Sheet row number (1-indexed, skip header)
+          row: index + DATA_FIRST_ROW, // Sheet row 2–30 (row 1 = header)
           scores: {
             authority: parseFloat(row[3]) || 0,
             aiCitations: parseFloat(row[4]) || 0,
@@ -210,13 +230,13 @@ const SignalNoirApp = () => {
       const text = await response.text();
       const rows = parseCSV(text);
 
-      // Skip header row, limit to rows 2-30
-      const pubs = rows
-        .slice(1, 30) // Only rows 2-30 (29 data rows)
+      // Row 1 = header, rows 2–30 = data. First parsed row is header, next 29 are data.
+      const dataRows = rows.slice(1, 1 + DATA_ROW_COUNT);
+      const pubs = dataRows
         .map((row, index) => ({
           id: index + 1,
           name: row[0] || '',
-          row: index + 2,
+          row: index + DATA_FIRST_ROW,
           scores: {
             authority: parseFloat(row[3]) || 0,
             aiCitations: parseFloat(row[4]) || 0,
@@ -499,6 +519,126 @@ const SignalNoirApp = () => {
           </div>
         </div>
 
+        {/* Signal result pages nav: 1. Authority … 6. Social amplification */}
+        <div className="mb-6 flex flex-wrap gap-2">
+          {SIGNAL_TABS.map(({ key, label, num }) => (
+            <button
+              key={key}
+              onClick={() => setSignalPage(key)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${signalPage === key
+                ? 'text-gray-900'
+                : 'bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-gray-300'}`}
+              style={signalPage === key ? { background: '#FFD700' } : {}}
+              onMouseEnter={(e) => { if (signalPage !== key) return; e.target.style.background = '#ffeb3b'; }}
+              onMouseLeave={(e) => { if (signalPage !== key) return; e.target.style.background = '#FFD700'; }}
+            >
+              {num}. {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Signal results page (when a tab is selected) */}
+        {signalPage && (() => {
+          if (publications.length === 0) {
+            return (
+              <div className="mb-6">
+                <button
+                  onClick={() => setSignalPage(null)}
+                  className="mb-4 text-gray-500 hover:text-gray-300 text-sm flex items-center gap-1 transition-colors"
+                >
+                  ← Back to dashboard
+                </button>
+                <p className="text-gray-500">No publications to show for this signal.</p>
+              </div>
+            );
+          }
+          const tab = SIGNAL_TABS.find(t => t.key === signalPage);
+          const label = tab ? tab.label : SIGNAL_LABELS[signalPage] || signalPage;
+          const sortedBySignal = [...publications].sort((a, b) => (b.scores[signalPage] || 0) - (a.scores[signalPage] || 0));
+          return (
+            <div className="mb-6">
+              <button
+                onClick={() => setSignalPage(null)}
+                className="mb-4 text-gray-500 hover:text-gray-300 text-sm flex items-center gap-1 transition-colors"
+              >
+                ← Back to dashboard
+              </button>
+              <div className="mb-6 bg-gray-900/50 rounded-lg border border-gray-800 overflow-hidden">
+                <div className="p-4 border-b border-gray-800">
+                  <h2 className="text-lg font-light tracking-wide">
+                    {label} Results
+                    <span className="text-gray-600 text-sm ml-2">({publications.length} publications, sorted by {label})</span>
+                  </h2>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-gray-800 text-gray-500 text-xs uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left w-12">#</th>
+                        <th className="px-4 py-3 text-left min-w-48">Publication</th>
+                        <th className="px-4 py-3 text-center w-20">{label}</th>
+                        <th className="px-4 py-3 text-center w-20">Overall</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sortedBySignal.map((pub, index) => {
+                        const signalScore = pub.scores[signalPage] || 0;
+                        const overall = calculateScore(pub.scores);
+                        return (
+                          <tr key={pub.id} className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+                            <td className="px-4 py-3 font-mono text-gray-500">{index + 1}</td>
+                            <td className="px-4 py-3 font-medium">{pub.name}</td>
+                            <td className="px-4 py-3 text-center">
+                              <span
+                                className="font-mono text-lg"
+                                style={{ color: signalScore >= 70 ? '#FFD700' : signalScore >= 50 ? '#f00069' : signalScore >= 30 ? '#ff8c00' : '#6b7280' }}
+                              >
+                                {signalScore}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-center font-mono text-gray-400">{overall.toFixed(1)}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="bg-gray-900/50 rounded-lg border border-gray-800 p-4">
+                <h3 className="text-sm text-gray-500 uppercase tracking-wider mb-4">{label} score distribution</h3>
+                <div className="space-y-3">
+                  {sortedBySignal.slice(0, 15).map((pub, index) => {
+                    const score = pub.scores[signalPage] || 0;
+                    const barGradient = score >= 70
+                      ? 'linear-gradient(to right, #b8860b, #FFD700)'
+                      : score >= 50
+                      ? 'linear-gradient(to right, #c5004f, #f00069)'
+                      : score >= 30
+                      ? 'linear-gradient(to right, #cc5500, #ff8c00)'
+                      : 'linear-gradient(to right, #374151, #6b7280)';
+                    return (
+                      <div key={pub.id} className="flex items-center gap-4">
+                        <span className="w-6 text-xs font-mono text-gray-600">{index + 1}</span>
+                        <span className="w-48 text-sm truncate">{pub.name}</span>
+                        <div className="flex-1 h-6 bg-gray-800 rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{ width: `${score}%`, background: barGradient }}
+                          />
+                        </div>
+                        <span className="w-12 text-right font-mono text-sm">{score}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Main dashboard (when no signal tab selected) */}
+        {!signalPage && (
+          <>
         {/* Add Publication */}
         <div className="mb-6 flex gap-3">
           <input
@@ -665,6 +805,8 @@ const SignalNoirApp = () => {
             </div>
           </div>
         )}
+          </>
+        )}
 
         {/* Footer */}
         <div className="mt-8 text-center text-xs text-gray-700">
@@ -712,10 +854,8 @@ function doPost(e) {
 function readData() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Master_Dashboard');
   const data = sheet.getDataRange().getValues();
-  
-  // Remove header row
-  const rows = data.slice(1);
-  
+  // Row 1 = header, rows 2-30 = data (29 rows). All tabs use this range.
+  const rows = data.slice(1, 30);
   return ContentService.createTextOutput(JSON.stringify({ data: rows }))
     .setMimeType(ContentService.MimeType.JSON);
 }
