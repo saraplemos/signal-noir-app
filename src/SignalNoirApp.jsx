@@ -358,6 +358,333 @@ const SignalNoirApp = () => {
     }
   };
 
+  // ── Query Intelligence data ─────────────────────────────────────────────────
+  const SOURCE_TYPES = {
+    editorial: { label: 'Premium Editorial', color: '#FFD700', bg: 'rgba(255,215,0,0.15)', border: 'rgba(255,215,0,0.4)' },
+    official:  { label: 'Official Brand / Destination', color: '#60a5fa', bg: 'rgba(96,165,250,0.12)', border: 'rgba(96,165,250,0.4)' },
+    specialist:{ label: 'Specialist Operator', color: '#2dd4bf', bg: 'rgba(45,212,191,0.12)', border: 'rgba(45,212,191,0.4)' },
+    aggregator:{ label: 'Booking / Review Aggregator', color: '#f97316', bg: 'rgba(249,115,22,0.15)', border: 'rgba(249,115,22,0.4)' },
+    blog:      { label: 'Commercial / Points Blog', color: '#a78bfa', bg: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.4)' },
+    youtube:   { label: 'YouTube', color: '#ef4444', bg: 'rgba(239,68,68,0.15)', border: 'rgba(239,68,68,0.4)' },
+  };
+
+  const QUERY_DATA = [
+    { id:1, topic:'Luxury hotel Dubai', category:'Hotels',
+      chatgpt:[{n:'The Times Travel',t:'editorial'},{n:'Condé Nast Traveller',t:'editorial'},{n:'Forbes Travel Guide',t:'editorial'}],
+      perplexity:[{n:'Locals Insider',t:'blog'},{n:'Luxury by Dubai',t:'blog'},{n:'Gentleman\'s Journal',t:'blog'}],
+      gemini:[{n:'Condé Nast Traveler',t:'editorial'},{n:'Forbes Travel Guide',t:'editorial'},{n:'Michelin Guide',t:'editorial'}],
+      claude:[{n:'TripAdvisor',t:'aggregator'},{n:'Booking.com',t:'aggregator'},{n:'Expedia',t:'aggregator'},{n:'MakeMyTrip',t:'aggregator'}]},
+    { id:2, topic:'Desert resort Dubai', category:'Hotels',
+      chatgpt:[{n:'Condé Nast Traveler',t:'editorial'},{n:'Marriott / Al Maha',t:'official'},{n:'Bab Al Shams',t:'official'}],
+      perplexity:[{n:'HIDMC',t:'blog'},{n:'God Save The Points',t:'blog'}],
+      gemini:[{n:'Condé Nast Traveler',t:'editorial'},{n:'Expedia',t:'aggregator'},{n:'Marriott.com',t:'official'}],
+      claude:[{n:'Booking.com',t:'aggregator'},{n:'TripAdvisor',t:'aggregator'},{n:'Travel Weekly',t:'editorial'},{n:'Bab Al Shams',t:'official'}]},
+    { id:3, topic:'Ski chalet Courchevel', category:'Ski',
+      chatgpt:[{n:'Financial Times',t:'editorial'},{n:'Cheval Blanc',t:'official'},{n:'Leo Trippi',t:'specialist'}],
+      perplexity:[{n:'Ski In Luxury',t:'specialist'},{n:'Alpine Luxury Chalets',t:'specialist'},{n:'Paragon Ski Chalets',t:'specialist'}],
+      gemini:[{n:'Kaluma Ski',t:'specialist'},{n:'Telegraph Travel',t:'editorial'},{n:'Forbes Travel Guide',t:'editorial'}],
+      claude:[{n:'Courchevel.com',t:'official'},{n:'Ski In Luxury',t:'specialist'},{n:'Le Collectionist',t:'specialist'},{n:'Ultimate Luxury Chalets',t:'specialist'}]},
+    { id:4, topic:'Luxury hotel Verbier', category:'Hotels',
+      chatgpt:[{n:'TripAdvisor',t:'aggregator'},{n:'Experimental Chalet',t:'official'}],
+      perplexity:[{n:'Oxford Ski',t:'specialist'},{n:'Ski In Luxury',t:'specialist'},{n:'Camel Snow',t:'specialist'}],
+      gemini:[{n:'Booking.com',t:'aggregator'},{n:'Forbes Travel Guide',t:'editorial'},{n:'Virgin Limited Edition',t:'official'}],
+      claude:[{n:'Scott Dunn',t:'specialist'},{n:'W Hotels / Marriott',t:'official'},{n:'Oxford Ski',t:'specialist'},{n:'Le Collectionist',t:'specialist'}]},
+    { id:5, topic:'Luxury resort Maldives', category:'Islands',
+      chatgpt:[{n:'Condé Nast Traveller',t:'editorial'},{n:'Condé Nast Traveler',t:'editorial'},{n:'Forbes Travel Guide',t:'editorial'}],
+      perplexity:[{n:'YouTube (Tourpoint)',t:'youtube'},{n:'Luxury Travel Expert',t:'blog'}],
+      gemini:[{n:'YouTube Top 10 Video',t:'youtube'},{n:'Condé Nast Traveler',t:'editorial'},{n:'Travel + Leisure',t:'editorial'}],
+      claude:[{n:'Dorsia Travel',t:'blog'},{n:'Maldives Magazine',t:'blog'},{n:'The Asia Collective',t:'blog'},{n:'Jetset & Travel',t:'blog'}]},
+    { id:6, topic:'Private island Maldives', category:'Islands',
+      chatgpt:[{n:'Forbes Travel Guide',t:'editorial'},{n:'Forbes Travel Guide',t:'editorial'}],
+      perplexity:[{n:'YouTube (Tourpoint)',t:'youtube'},{n:'Niyama Private Islands',t:'official'}],
+      gemini:[{n:'Forbes Travel Guide',t:'editorial'},{n:'Four Seasons Press Room',t:'official'},{n:'Velaa Private Island',t:'official'}],
+      claude:[{n:'Kudadoo.com',t:'official'},{n:'Four Seasons Voavah',t:'official'},{n:'Travel Mole',t:'blog'},{n:'Vladi Private Islands',t:'specialist'}]},
+    { id:7, topic:'Private island Caribbean', category:'Islands',
+      chatgpt:[{n:'Condé Nast Traveler',t:'editorial'},{n:'Condé Nast Traveller',t:'editorial'}],
+      perplexity:[{n:'Ambergris Cay',t:'official'},{n:'Carib Journal',t:'blog'},{n:'Islands.com',t:'blog'}],
+      gemini:[{n:'Lifestyle Travel Network',t:'blog'},{n:'Travel + Leisure',t:'editorial'},{n:'Virgin Limited Edition',t:'official'}],
+      claude:[{n:'Private Islands Online',t:'aggregator'},{n:'WIMCO Villas',t:'specialist'},{n:'Mustique Island',t:'official'},{n:'Vladi Private Islands',t:'specialist'}]},
+    { id:8, topic:'Luxury hotel Lake Como', category:'Hotels',
+      chatgpt:[{n:'Vogue',t:'editorial'},{n:'Condé Nast Traveler',t:'editorial'}],
+      perplexity:[{n:'YouTube (Luxury Travel)',t:'youtube'},{n:'Luxury Wanderings',t:'blog'}],
+      gemini:[{n:'Forbes Travel Guide',t:'editorial'},{n:'World\'s 50 Best Hotels',t:'editorial'},{n:'Condé Nast Traveler',t:'editorial'}],
+      claude:[{n:'Hotels.com',t:'aggregator'},{n:'Travelocity',t:'aggregator'},{n:'Elite Traveler',t:'editorial'},{n:'Luxury Escapes',t:'aggregator'}]},
+    { id:9, topic:'Luxury hotel Amalfi Coast', category:'Hotels',
+      chatgpt:[{n:'Condé Nast Traveller',t:'editorial'},{n:'Condé Nast Traveler',t:'editorial'}],
+      perplexity:[{n:'Luxury.it',t:'blog'},{n:'TripAdvisor',t:'aggregator'},{n:'Anantara',t:'official'}],
+      gemini:[{n:'Lulu\'s Luxury Lifestyle',t:'blog'},{n:'Forbes Travel Guide',t:'editorial'},{n:'Belmond',t:'official'}],
+      claude:[{n:'Luxury Escapes',t:'aggregator'},{n:'TripAdvisor',t:'aggregator'},{n:'Mr & Mrs Smith',t:'specialist'},{n:'American Express Travel',t:'aggregator'}]},
+    { id:10, topic:'Boutique hotel French Riviera', category:'Hotels',
+      chatgpt:[{n:'Vogue',t:'editorial'},{n:'Mr & Mrs Smith',t:'specialist'},{n:'Condé Nast Traveler',t:'editorial'}],
+      perplexity:[{n:'Les Boutique Hotels',t:'aggregator'},{n:'Boutique Hotels Guide',t:'aggregator'}],
+      gemini:[{n:'Tablet Hotels',t:'aggregator'},{n:'Michelin Guide',t:'editorial'},{n:'Mr & Mrs Smith',t:'specialist'}],
+      claude:[{n:'Small Luxury Hotels',t:'specialist'},{n:'My Boutique Hotel',t:'aggregator'},{n:'Mr & Mrs Smith',t:'specialist'},{n:'TripAdvisor',t:'aggregator'}]},
+    { id:11, topic:'Luxury hotel Kyoto', category:'Hotels',
+      chatgpt:[{n:'Vogue',t:'editorial'},{n:'Condé Nast Traveler',t:'editorial'}],
+      perplexity:[{n:'No editorial sources found',t:'blog'}],
+      gemini:[{n:'Forbes Travel Guide',t:'editorial'},{n:'Booking.com',t:'aggregator'},{n:'Travel + Leisure',t:'editorial'}],
+      claude:[{n:'Hotel The Mitsui',t:'official'},{n:'American Express Travel',t:'aggregator'},{n:'Small Luxury Hotels',t:'specialist'},{n:'TripAdvisor',t:'aggregator'}]},
+    { id:12, topic:'Luxury safari Tanzania', category:'Safari',
+      chatgpt:[{n:'Condé Nast Traveller',t:'editorial'},{n:'Financial Times',t:'editorial'},{n:'&Beyond',t:'official'}],
+      perplexity:[{n:'Tanzania National Parks',t:'official'},{n:'Go2Africa',t:'specialist'},{n:'Safari Bookings',t:'aggregator'}],
+      gemini:[{n:'Africa Travel',t:'specialist'},{n:'Ubuntu Travel Group',t:'specialist'},{n:'Singita',t:'official'}],
+      claude:[{n:'Serengeti.com',t:'official'},{n:'Asilia Africa',t:'official'},{n:'TripAdvisor',t:'aggregator'},{n:'Go2Africa',t:'specialist'}]},
+    { id:13, topic:'Private museum tour Paris', category:'Experiences',
+      chatgpt:[{n:'Louvre Official',t:'official'},{n:'Context Travel',t:'specialist'},{n:'Musée d\'Orsay Official',t:'official'}],
+      perplexity:[{n:'Paris Luxury Tours',t:'blog'},{n:'Paris By Emy',t:'blog'},{n:'My Private Paris',t:'blog'}],
+      gemini:[{n:'Grand Hôtel du Palais Royal',t:'official'},{n:'My Private Paris',t:'blog'},{n:'Paris to Versailles Tours',t:'blog'}],
+      claude:[{n:'Louvre Official',t:'official'},{n:'Paris Muse',t:'specialist'},{n:'Context Travel',t:'specialist'},{n:'Viator',t:'aggregator'}]},
+    { id:14, topic:'Private Vatican tour', category:'Experiences',
+      chatgpt:[{n:'Vatican Museums Official',t:'official'},{n:'Context Travel',t:'specialist'},{n:'Through Eternity Tours',t:'specialist'}],
+      perplexity:[{n:'Vatican Tickets Online',t:'aggregator'},{n:'LivTours',t:'aggregator'},{n:'Italy by Luxe',t:'blog'}],
+      gemini:[{n:'The Tour Guy',t:'blog'},{n:'The Vatican Tickets',t:'aggregator'}],
+      claude:[{n:'Vatican Museums Official',t:'official'},{n:'Walks of Italy',t:'specialist'},{n:'LivTours',t:'aggregator'},{n:'The Roman Guy',t:'blog'}]},
+    { id:15, topic:'Private cooking class with chef', category:'Experiences',
+      chatgpt:[{n:'Traveling Spoon',t:'specialist'},{n:'EatWith',t:'specialist'},{n:'Airbnb Experiences',t:'aggregator'}],
+      perplexity:[{n:'Luxury Gold',t:'specialist'},{n:'Four Seasons (Chiang Mai)',t:'official'}],
+      gemini:[{n:'La Côte Saint-Jacques',t:'official'},{n:'Michelin Guide',t:'editorial'}],
+      claude:[{n:'EatWith',t:'specialist'},{n:'Traveling Spoon',t:'specialist'},{n:'Airbnb Experiences',t:'aggregator'},{n:'Context Travel',t:'specialist'}]},
+    { id:16, topic:'Wellness retreat', category:'Wellness',
+      chatgpt:[{n:'Condé Nast Traveller',t:'editorial'},{n:'Condé Nast Traveler',t:'editorial'}],
+      perplexity:[{n:'The Luxury Travel Expert',t:'blog'},{n:'Locals Insider',t:'blog'},{n:'Luxe Wellness Club',t:'blog'}],
+      gemini:[{n:'Condé Nast Traveller',t:'editorial'},{n:'Explore.com',t:'blog'}],
+      claude:[{n:'SHA Wellness Clinic',t:'official'},{n:'COMO Hotels',t:'official'},{n:'Condé Nast Traveler',t:'editorial'},{n:'Travel + Leisure',t:'editorial'}]},
+    { id:17, topic:'Medical wellness program', category:'Wellness',
+      chatgpt:[{n:'Clinique La Prairie',t:'official'},{n:'Lanserhof',t:'official'},{n:'SHA Wellness',t:'official'}],
+      perplexity:[{n:'GetTransfer Blog',t:'blog'},{n:'RAKxa Wellness',t:'official'}],
+      gemini:[{n:'Lanserhof',t:'official'},{n:'Wellbeing Escapes',t:'specialist'},{n:'SHA Wellness',t:'official'}],
+      claude:[{n:'Lanserhof',t:'official'},{n:'Chenot',t:'official'},{n:'Mayo Clinic',t:'official'},{n:'Medical Tourism Association',t:'blog'}]},
+    { id:18, topic:'Antarctic expedition cruise', category:'Adventure',
+      chatgpt:[{n:'Quark Expeditions',t:'official'},{n:'Silversea',t:'official'},{n:'National Geographic Expeditions',t:'editorial'}],
+      perplexity:[{n:'Antarctica Cruises',t:'aggregator'},{n:'Swoop Antarctica',t:'specialist'},{n:'Cruise Critic',t:'aggregator'}],
+      gemini:[{n:'Silversea',t:'official'},{n:'Luxury Check-In',t:'blog'},{n:'Ponant',t:'official'}],
+      claude:[{n:'Quark Expeditions',t:'official'},{n:'Silversea',t:'official'},{n:'Ponant',t:'official'},{n:'IAATO',t:'official'}]},
+    { id:19, topic:'Northern lights private charter', category:'Adventure',
+      chatgpt:[{n:'Visit Tromsø',t:'official'},{n:'Arctic GM',t:'specialist'},{n:'TCS World Travel',t:'specialist'}],
+      perplexity:[{n:'TCS World Travel',t:'specialist'},{n:'Reykjavik Tourist Info',t:'official'}],
+      gemini:[{n:'Lapland Private',t:'specialist'},{n:'Aurora Zone',t:'specialist'}],
+      claude:[{n:'Guide to Iceland',t:'specialist'},{n:'Hurtigruten',t:'official'},{n:'Visit Norway',t:'official'},{n:'Iceland Aurora',t:'official'}]},
+    { id:20, topic:'Heli-skiing British Columbia', category:'Adventure',
+      chatgpt:[{n:'CMH Heli-Skiing',t:'official'},{n:'Mike Wiegele',t:'official'},{n:'Condé Nast Traveler',t:'editorial'}],
+      perplexity:[{n:'Bella Coola Heli Sports',t:'official'},{n:'Mabey Ski',t:'blog'}],
+      gemini:[{n:'Global Air Charters',t:'specialist'},{n:'CMH Heli-Skiing',t:'official'},{n:'Bella Coola',t:'official'}],
+      claude:[{n:'CMH Heli-Skiing',t:'official'},{n:'Bella Coola Heli Sports',t:'official'},{n:'Last Frontier',t:'official'},{n:'HeliCat Canada',t:'official'}]},
+    { id:21, topic:'Venice Simplon Orient Express', category:'Transport',
+      chatgpt:[{n:'Belmond',t:'official'},{n:'Condé Nast Traveller',t:'editorial'},{n:'Condé Nast Traveler',t:'editorial'}],
+      perplexity:[{n:'Luxury Train Tickets',t:'aggregator'},{n:'Railtour',t:'aggregator'}],
+      gemini:[{n:'Belmond',t:'official'},{n:'Condé Nast Traveler',t:'editorial'}],
+      claude:[{n:'Belmond',t:'official'},{n:'Travel + Leisure',t:'editorial'},{n:'Condé Nast Traveler',t:'editorial'}]},
+    { id:22, topic:'Private safari Botswana', category:'Safari',
+      chatgpt:[{n:'Expert Africa',t:'specialist'},{n:'Wilderness',t:'official'},{n:'Great Plains Conservation',t:'official'}],
+      perplexity:[{n:'Luxury Travel Expert',t:'blog'},{n:'Passport and Pixels',t:'blog'}],
+      gemini:[{n:'Alluring Africa',t:'specialist'},{n:'Africa Odyssey',t:'specialist'},{n:'Wilderness Destinations',t:'official'}],
+      claude:[{n:'Great Plains Conservation',t:'official'},{n:'Wilderness Safaris',t:'official'},{n:'&Beyond',t:'official'},{n:'Safari Bookings',t:'aggregator'}]},
+    { id:23, topic:'Villa with chef Tuscany', category:'Villas',
+      chatgpt:[{n:'Tuscany Now & More',t:'specialist'},{n:'Home in Italy',t:'specialist'},{n:'Le Collectionist',t:'specialist'}],
+      perplexity:[{n:'Coselli.com',t:'aggregator'},{n:'Arianna and Friends',t:'specialist'},{n:'Haute Retreats',t:'specialist'}],
+      gemini:[{n:'Tuscan Dream',t:'aggregator'},{n:'Kinglike Concierge',t:'specialist'}],
+      claude:[{n:'The Thinking Traveller',t:'specialist'},{n:'Oliver\'s Travels',t:'specialist'},{n:'CV Villas',t:'specialist'},{n:'Scott Dunn',t:'specialist'}]},
+    { id:24, topic:'Catered ski chalet Verbier', category:'Ski',
+      chatgpt:[{n:'Verbier Exclusive',t:'specialist'},{n:'Ultimate Luxury Chalets',t:'specialist'},{n:'Leo Trippi',t:'specialist'}],
+      perplexity:[{n:'David Pearson Travel',t:'specialist'},{n:'Luxury Chalet Co.',t:'specialist'},{n:'Verbier.co',t:'official'}],
+      gemini:[{n:'Verbier Exclusive',t:'specialist'},{n:'Oxford Ski',t:'specialist'}],
+      claude:[{n:'Leo Trippi',t:'specialist'},{n:'Scott Dunn',t:'specialist'},{n:'Ski In Luxury',t:'specialist'},{n:'Powder Byrne',t:'specialist'}]},
+    { id:25, topic:'Yacht charter Mediterranean', category:'Yachts',
+      chatgpt:[{n:'Fraser Yachts',t:'specialist'},{n:'Burgess',t:'specialist'},{n:'Camper & Nicholsons',t:'specialist'}],
+      perplexity:[{n:'Northrop & Johnson',t:'specialist'},{n:'Mediterranean Yacht Charters',t:'specialist'}],
+      gemini:[{n:'Fraser Yachts',t:'specialist'},{n:'Sunsail',t:'aggregator'}],
+      claude:[{n:'Fraser Yachts',t:'specialist'},{n:'Burgess',t:'specialist'},{n:'Northrop & Johnson',t:'specialist'},{n:'Boat International',t:'editorial'}]},
+    { id:26, topic:'Maldives butler resort', category:'Islands',
+      chatgpt:[{n:'St. Regis Maldives',t:'official'},{n:'SUNxSIYAM',t:'official'}],
+      perplexity:[{n:'Go Ocean Travel',t:'aggregator'}],
+      gemini:[{n:'The Ritz-Carlton Maldives',t:'official'},{n:'St. Regis Maldives',t:'official'}],
+      claude:[{n:'Condé Nast Traveller',t:'editorial'},{n:'Mr & Mrs Smith',t:'specialist'},{n:'Virtuoso',t:'specialist'},{n:'LHW',t:'specialist'}]},
+    { id:27, topic:'Multi-generational villa rental', category:'Villas',
+      chatgpt:[{n:'onefinestay',t:'specialist'},{n:'Mandarin Oriental Homes',t:'official'},{n:'Le Collectionist',t:'specialist'}],
+      perplexity:[{n:'Villas of Distinction',t:'specialist'},{n:'CV Villas',t:'specialist'}],
+      gemini:[{n:'Tripwix',t:'aggregator'},{n:'Bailey Robinson',t:'specialist'}],
+      claude:[{n:'Scott Dunn',t:'specialist'},{n:'i-escape',t:'specialist'},{n:'Villanovo',t:'specialist'},{n:'CV Villas',t:'specialist'}]},
+    { id:28, topic:'Family estate rental', category:'Villas',
+      chatgpt:[{n:'Oliver\'s Travels',t:'specialist'},{n:'Le Collectionist',t:'specialist'},{n:'Mandarin Oriental',t:'official'}],
+      perplexity:[{n:'Haute Retreats',t:'specialist'},{n:'Elite Havens',t:'specialist'}],
+      gemini:[{n:'Haute Retreats',t:'specialist'},{n:'Le Collectionist',t:'specialist'}],
+      claude:[{n:'Unique Home Stays',t:'specialist'},{n:'Invitation Only',t:'specialist'},{n:'Rural Retreats',t:'specialist'}]},
+    { id:29, topic:'Bespoke Antarctica tour operators', category:'Adventure',
+      chatgpt:[{n:'Black Tomato',t:'specialist'},{n:'Abercrombie & Kent',t:'specialist'},{n:'Quark Expeditions',t:'official'}],
+      perplexity:[{n:'Extraordinary Journeys',t:'specialist'},{n:'Cruise Critic',t:'aggregator'}],
+      gemini:[{n:'Cruise Critic',t:'aggregator'},{n:'Scenic Luxury Cruises',t:'official'}],
+      claude:[{n:'White Desert',t:'official'},{n:'Silversea',t:'official'},{n:'Ponant',t:'official'},{n:'Pelorus',t:'specialist'}]},
+    { id:30, topic:'Private jet London to New York', category:'Transport',
+      chatgpt:[{n:'PrivateFly',t:'specialist'},{n:'VistaJet',t:'official'},{n:'NetJets',t:'official'},{n:'LunaJets',t:'specialist'}],
+      perplexity:[{n:'Private Jet London to NY',t:'aggregator'},{n:'Private Jet Routes',t:'aggregator'}],
+      gemini:[{n:'ACC Aviation',t:'specialist'},{n:'Global Charter',t:'specialist'}],
+      claude:[{n:'VistaJet',t:'official'},{n:'NetJets',t:'official'},{n:'AirPartner',t:'specialist'},{n:'FlyVictor',t:'specialist'}]},
+  ];
+
+  // ── Query Intelligence panel ────────────────────────────────────────────────
+  const QueryResultsPanel = () => {
+    const [qFilter, setQFilter] = React.useState('all');
+    const [catFilter, setCatFilter] = React.useState('All');
+    const categories = ['All', ...Array.from(new Set(QUERY_DATA.map(q => q.category)))];
+    const platforms = ['all','chatgpt','perplexity','gemini','claude'];
+    const platformLabels = { all:'All Platforms', chatgpt:'ChatGPT', perplexity:'Perplexity', gemini:'Gemini', claude:'Claude' };
+    const platformColors = { chatgpt:'#10a37f', perplexity:'#20b2aa', gemini:'#4285f4', claude:'#c9a96e' };
+
+    const countType = (sources, type) => sources.filter(s => s.t === type).length;
+    const isDiverged = (q) => {
+      const all = [...q.chatgpt, ...q.perplexity, ...q.gemini, ...q.claude];
+      const editorialCount = all.filter(s => s.t === 'editorial').length;
+      const nonEditorialCount = all.filter(s => s.t !== 'editorial' && s.t !== 'official').length;
+      return nonEditorialCount >= editorialCount;
+    };
+
+    const totalNonEditorial = QUERY_DATA.reduce((acc, q) => {
+      const all = [...q.chatgpt, ...q.perplexity, ...q.gemini, ...q.claude];
+      return acc + all.filter(s => s.t !== 'editorial' && s.t !== 'official').length;
+    }, 0);
+    const totalSources = QUERY_DATA.reduce((acc, q) =>
+      acc + q.chatgpt.length + q.perplexity.length + q.gemini.length + q.claude.length, 0);
+    const divergedCount = QUERY_DATA.filter(isDiverged).length;
+    const youtubeCount = QUERY_DATA.filter(q =>
+      [...q.chatgpt,...q.perplexity,...q.gemini,...q.claude].some(s => s.t === 'youtube')).length;
+
+    const filtered = QUERY_DATA.filter(q =>
+      (catFilter === 'All' || q.category === catFilter)
+    );
+
+    const renderSources = (sources, platform) => {
+      const visible = qFilter === 'all' || qFilter === platform;
+      if (!visible) return null;
+      if (!sources || sources.length === 0) return (
+        <span className="text-xs text-gray-600 italic">No data</span>
+      );
+      return sources.map((s, i) => {
+        const st = SOURCE_TYPES[s.t] || SOURCE_TYPES.blog;
+        return (
+          <span key={i} className="inline-flex items-center text-xs px-2 py-0.5 rounded-full mr-1 mb-1"
+            style={{ background: st.bg, border: `1px solid ${st.border}`, color: st.color, fontWeight: 500 }}>
+            {s.n}
+          </span>
+        );
+      });
+    };
+
+    return (
+      <div className="mb-6">
+        <button onClick={() => setSignalPage(null)}
+          className="mb-4 text-gray-500 hover:text-gray-300 text-sm flex items-center gap-1 transition-colors">
+          ← Back to dashboard
+        </button>
+
+        {/* Summary stats */}
+        <div className="grid grid-cols-2 gap-3 mb-6 sm:grid-cols-4">
+          {[
+            { label: 'Queries tested', val: '30', sub: 'luxury travel categories' },
+            { label: 'Platform divergence', val: `${divergedCount}/30`, sub: 'queries where non-editorial leads' },
+            { label: 'YouTube citations', val: `${youtubeCount} queries`, sub: 'where video outranked print' },
+            { label: 'Non-editorial sources', val: `${Math.round(totalNonEditorial/totalSources*100)}%`, sub: 'of all citations across 4 platforms' },
+          ].map((s,i) => (
+            <div key={i} className="bg-gray-900/50 border border-gray-800 rounded-lg p-4">
+              <div className="font-mono text-2xl font-bold mb-1" style={{ color: '#FFD700' }}>{s.val}</div>
+              <div className="text-gray-300 text-sm font-medium">{s.label}</div>
+              <div className="text-gray-600 text-xs mt-1">{s.sub}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Legend */}
+        <div className="flex flex-wrap gap-2 mb-5">
+          {Object.entries(SOURCE_TYPES).map(([k,v]) => (
+            <span key={k} className="inline-flex items-center text-xs px-2 py-1 rounded-full"
+              style={{ background: v.bg, border: `1px solid ${v.border}`, color: v.color }}>
+              {v.label}
+            </span>
+          ))}
+        </div>
+
+        {/* Filters */}
+        <div className="flex flex-wrap gap-3 mb-5">
+          <div className="flex flex-wrap gap-2">
+            {platforms.map(p => (
+              <button key={p} onClick={() => setQFilter(p)}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                style={qFilter === p
+                  ? { background: p === 'all' ? '#FFD700' : platformColors[p], color: p === 'all' ? '#111' : '#fff' }
+                  : { background: '#1f2937', color: '#9ca3af' }}>
+                {platformLabels[p]}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map(c => (
+              <button key={c} onClick={() => setCatFilter(c)}
+                className="px-3 py-1.5 rounded-lg text-xs transition-colors"
+                style={catFilter === c ? { background: 'rgba(255,215,0,0.15)', color: '#FFD700', border: '1px solid rgba(255,215,0,0.4)' }
+                  : { background: '#1f2937', color: '#6b7280', border: '1px solid transparent' }}>
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Query cards */}
+        <div className="space-y-3">
+          {filtered.map(q => {
+            const diverged = isDiverged(q);
+            return (
+              <div key={q.id} className="bg-gray-900/50 border rounded-lg overflow-hidden"
+                style={{ borderColor: diverged ? 'rgba(249,115,22,0.3)' : '#1f2937' }}>
+                <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800">
+                  <span className="font-mono text-xs text-gray-600 w-6">{q.id}</span>
+                  <span className="text-sm font-medium text-gray-100 flex-1">{q.topic}</span>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-500">{q.category}</span>
+                  {diverged && (
+                    <span className="text-xs px-2 py-0.5 rounded-full"
+                      style={{ background: 'rgba(249,115,22,0.15)', color: '#f97316', border: '1px solid rgba(249,115,22,0.3)' }}>
+                      ⚠ Platform divergence
+                    </span>
+                  )}
+                </div>
+                <div className="p-4 grid gap-3"
+                  style={{ gridTemplateColumns: qFilter === 'all' ? 'repeat(4, 1fr)' : '1fr' }}>
+                  {['chatgpt','perplexity','gemini','claude'].map(p => {
+                    if (qFilter !== 'all' && qFilter !== p) return null;
+                    return (
+                      <div key={p}>
+                        <div className="text-xs font-medium mb-2" style={{ color: platformColors[p] }}>
+                          {platformLabels[p]}
+                        </div>
+                        <div className="flex flex-wrap">
+                          {renderSources(q[p], p)}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Platform divergence spotlight */}
+        <div className="mt-6 bg-gray-900/50 border border-gray-800 rounded-lg p-5">
+          <h3 className="text-sm text-gray-400 uppercase tracking-wider mb-4">Platform divergence spotlight — Query 1: Luxury hotel Dubai</h3>
+          <div className="grid grid-cols-4 gap-4">
+            {['chatgpt','perplexity','gemini','claude'].map(p => (
+              <div key={p}>
+                <div className="text-xs font-semibold mb-2" style={{ color: platformColors[p] }}>{platformLabels[p]}</div>
+                {renderSources(QUERY_DATA[0][p], p)}
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-600 mt-4 border-t border-gray-800 pt-3">
+            Same query. Four completely different authority hierarchies. ChatGPT surfaces premium editorial; Perplexity leads with commercial blogs; Claude leads with aggregators. This is the structural gap Spotlight can close.
+          </p>
+        </div>
+      </div>
+    );
+  };
+
   // ── AI Citations breakdown panel ───────────────────────────────────────────
   const AICitationsPanel = ({ pubs, breakdown }) => {
     const sorted = [...pubs].sort((a, b) => {
@@ -682,7 +1009,15 @@ const SignalNoirApp = () => {
               {num}. {label}
             </button>
           ))}
+          <button onClick={() => setSignalPage('queryResults')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${signalPage === 'queryResults' ? 'text-white' : 'bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-gray-300'}`}
+            style={signalPage === 'queryResults' ? { background: '#7c3aed' } : {}}>
+            ◉ Query Intelligence
+          </button>
         </div>
+
+        {/* Query Intelligence page */}
+        {signalPage === 'queryResults' && <QueryResultsPanel />}
 
         {/* AI Citations page — custom breakdown */}
         {signalPage === 'aiCitations' && (
@@ -690,7 +1025,7 @@ const SignalNoirApp = () => {
         )}
 
         {/* Other signal pages */}
-        {signalPage && signalPage !== 'aiCitations' && (() => {
+        {signalPage && signalPage !== 'aiCitations' && signalPage !== 'queryResults' && (() => {
           if (publications.length === 0) {
             return (
               <div className="mb-6">
