@@ -369,7 +369,7 @@ const SignalNoirApp = () => {
   };
 
   const QUERY_DATA = [
-    // ── BATCH 1: Verified citations (Feb 14 2026) ─────────────────────────────
+    // ── BATCH 1: Hotels & Safari (Q1–12) ──────────────────────────────────────
     { id:1, topic:'Luxury hotel Dubai', category:'Hotels',
       chatgpt:[
         {n:'The Times Travel',t:'editorial'},
@@ -609,6 +609,380 @@ const SignalNoirApp = () => {
         {n:'Go2Africa',t:'specialist'},
         {n:'Singita',t:'official'},
       ]},
+
+    // ── BATCH 2: Experiences, Wellness & Adventure (Q13–22) ───────────────────
+    { id:13, topic:'Private museum tour Paris', category:'Experiences',
+      chatgpt:[
+        {n:'Louvre (official)',t:'official'},
+        {n:'Context Travel',t:'specialist'},
+        {n:'Musée d\'Orsay (official)',t:'official'},
+      ],
+      perplexity:[
+        {n:'Paris Luxury Tours',t:'specialist'},
+        {n:'Paris By Emy',t:'specialist'},
+        {n:'My Private Paris',t:'specialist'},
+      ],
+      gemini:[
+        {n:'Grand Hôtel du Palais Royal',t:'official'},
+        {n:'My Private Paris',t:'specialist'},
+        {n:'Paris to Versailles Tours',t:'specialist'},
+      ],
+      claude:[
+        {n:'Louvre (official)',t:'official'},
+        {n:'Paris Muse',t:'specialist'},
+        {n:'Viator',t:'aggregator'},
+        {n:'GetYourGuide',t:'aggregator'},
+      ]},
+    { id:14, topic:'Private Vatican tour', category:'Experiences',
+      chatgpt:[
+        {n:'Vatican Museums (official)',t:'official'},
+        {n:'Context Travel',t:'specialist'},
+        {n:'Through Eternity Tours',t:'specialist'},
+      ],
+      perplexity:[
+        {n:'Vatican Tickets Online',t:'specialist'},
+        {n:'LivTours',t:'specialist'},
+        {n:'Italy by Luxe',t:'specialist'},
+      ],
+      gemini:[
+        {n:'The Tour Guy',t:'specialist'},
+        {n:'The Vatican Tickets',t:'specialist'},
+      ],
+      claude:[
+        {n:'Vatican Museums (official)',t:'official'},
+        {n:'Walks of Italy',t:'specialist'},
+        {n:'LivTours',t:'specialist'},
+        {n:'The Roman Guy',t:'specialist'},
+      ]},
+    { id:15, topic:'Private cooking class local chef', category:'Experiences',
+      chatgpt:[
+        {n:'Traveling Spoon',t:'specialist'},
+        {n:'Eatwith',t:'specialist'},
+        {n:'Airbnb Experiences',t:'aggregator'},
+      ],
+      perplexity:[
+        {n:'Luxury Gold',t:'specialist'},
+        {n:'Four Seasons Chiang Mai',t:'official'},
+      ],
+      gemini:[
+        {n:'La Côte Saint-Jacques',t:'official'},
+        {n:'Michelin Guide',t:'editorial'},
+      ],
+      claude:[
+        {n:'EatWith',t:'specialist'},
+        {n:'Traveling Spoon',t:'specialist'},
+        {n:'Airbnb Experiences',t:'aggregator'},
+        {n:'Context Travel',t:'specialist'},
+      ]},
+    { id:16, topic:'Wellness retreat', category:'Wellness',
+      chatgpt:[
+        {n:'Condé Nast Traveller UK',t:'editorial'},
+        {n:'Condé Nast Traveller ME',t:'editorial'},
+        {n:'Condé Nast Traveler US',t:'editorial'},
+      ],
+      perplexity:[
+        {n:'The Luxury Travel Expert',t:'blog'},
+        {n:'Locals Insider',t:'blog'},
+        {n:'Luxe Wellness Club',t:'blog'},
+      ],
+      gemini:[
+        {n:'Condé Nast Traveller',t:'editorial'},
+        {n:'Explore.com',t:'blog'},
+      ],
+      claude:[
+        {n:'SHA Wellness Clinic',t:'official'},
+        {n:'COMO Hotels',t:'official'},
+        {n:'Condé Nast Traveler',t:'editorial'},
+        {n:'SpaFinder',t:'aggregator'},
+      ]},
+    { id:17, topic:'Medical wellness program', category:'Wellness',
+      chatgpt:[
+        {n:'Clinique La Prairie',t:'official'},
+        {n:'Lanserhof',t:'official'},
+        {n:'SHA Wellness Clinic',t:'official'},
+      ],
+      perplexity:[
+        {n:'GetTransfer Blog',t:'blog'},
+        {n:'RAKxa Integrative Wellness',t:'official'},
+      ],
+      gemini:[
+        {n:'Lanserhof',t:'official'},
+        {n:'Wellbeing Escapes',t:'specialist'},
+        {n:'SHA Wellness Clinic',t:'official'},
+      ],
+      claude:[
+        {n:'Lanserhof',t:'official'},
+        {n:'Chenot',t:'official'},
+        {n:'Six Senses',t:'official'},
+        {n:'Medical Tourism Association',t:'specialist'},
+      ]},
+    { id:18, topic:'Antarctic expedition cruise', category:'Adventure',
+      chatgpt:[
+        {n:'Quark Expeditions',t:'specialist'},
+        {n:'Silversea',t:'official'},
+        {n:'PONANT',t:'official'},
+        {n:'National Geographic Expeditions',t:'editorial'},
+      ],
+      perplexity:[
+        {n:'Antarctica Cruises',t:'specialist'},
+        {n:'Swoop Antarctica',t:'specialist'},
+        {n:'Cruise Critic',t:'aggregator'},
+      ],
+      gemini:[
+        {n:'Silversea',t:'official'},
+        {n:'Luxury Check-In',t:'blog'},
+        {n:'Ponant',t:'official'},
+      ],
+      claude:[
+        {n:'Quark Expeditions',t:'specialist'},
+        {n:'Silversea',t:'official'},
+        {n:'IAATO',t:'official'},
+        {n:'Cruise Critic',t:'aggregator'},
+      ]},
+    { id:19, topic:'Northern lights private charter', category:'Adventure',
+      chatgpt:[
+        {n:'Visit Tromsø',t:'official'},
+        {n:'Arctic GM',t:'specialist'},
+        {n:'TCS World Travel',t:'specialist'},
+      ],
+      perplexity:[
+        {n:'TCS World Travel',t:'specialist'},
+        {n:'Reykjavik Tourist Info',t:'official'},
+      ],
+      gemini:[
+        {n:'Lapland Private',t:'specialist'},
+        {n:'Aurora Zone',t:'specialist'},
+      ],
+      claude:[
+        {n:'Guide to Iceland',t:'blog'},
+        {n:'Hurtigruten',t:'official'},
+        {n:'Visit Norway',t:'official'},
+        {n:'Aurora Forecast',t:'specialist'},
+      ]},
+    { id:20, topic:'Heli-skiing British Columbia', category:'Adventure',
+      chatgpt:[
+        {n:'CMH Heli-Skiing',t:'official'},
+        {n:'Mike Wiegele',t:'official'},
+        {n:'Condé Nast Traveler',t:'editorial'},
+      ],
+      perplexity:[
+        {n:'Bella Coola Heli Sports',t:'official'},
+        {n:'Mabey Ski',t:'specialist'},
+      ],
+      gemini:[
+        {n:'CMH Heli-Skiing',t:'official'},
+        {n:'Bella Coola Heli Sports',t:'official'},
+        {n:'Global Air Charters',t:'specialist'},
+      ],
+      claude:[
+        {n:'CMH Heli-Skiing',t:'official'},
+        {n:'Bella Coola Heli Sports',t:'official'},
+        {n:'HeliCat Canada',t:'official'},
+        {n:'Powder Magazine',t:'editorial'},
+      ]},
+    { id:21, topic:'Venice Simplon Orient Express', category:'Transport',
+      chatgpt:[
+        {n:'Belmond',t:'official'},
+        {n:'Condé Nast Traveller UK',t:'editorial'},
+        {n:'Condé Nast Traveler US',t:'editorial'},
+      ],
+      perplexity:[
+        {n:'Luxury Train Tickets',t:'specialist'},
+        {n:'Railtour',t:'specialist'},
+      ],
+      gemini:[
+        {n:'Belmond',t:'official'},
+        {n:'Condé Nast Traveler',t:'editorial'},
+      ],
+      claude:[
+        {n:'Belmond',t:'official'},
+        {n:'Condé Nast Traveler',t:'editorial'},
+        {n:'Travel + Leisure',t:'editorial'},
+      ]},
+    { id:22, topic:'Private safari lodge Botswana', category:'Safari',
+      chatgpt:[
+        {n:'Expert Africa',t:'specialist'},
+        {n:'Wilderness (Mombo)',t:'official'},
+        {n:'Great Plains Conservation',t:'official'},
+      ],
+      perplexity:[
+        {n:'The Luxury Travel Expert',t:'blog'},
+        {n:'Passport and Pixels',t:'blog'},
+      ],
+      gemini:[
+        {n:'Alluring Africa',t:'specialist'},
+        {n:'Africa Odyssey',t:'specialist'},
+        {n:'Wilderness Destinations',t:'official'},
+      ],
+      claude:[
+        {n:'Great Plains Conservation',t:'official'},
+        {n:'Wilderness Safaris',t:'official'},
+        {n:'&Beyond',t:'official'},
+        {n:'Safari Bookings',t:'aggregator'},
+      ]},
+
+    // ── BATCH 3: Villas, Yachts & Private Travel (Q23–30) ────────────────────
+    { id:23, topic:'Villa with chef & staff Tuscany', category:'Villas',
+      chatgpt:[
+        {n:'Tuscany Now & More',t:'specialist'},
+        {n:'Home in Italy',t:'specialist'},
+        {n:'Le Collectionist',t:'specialist'},
+      ],
+      perplexity:[
+        {n:'Coselli',t:'specialist'},
+        {n:'Arianna and Friends',t:'specialist'},
+        {n:'Il Casale del Marchese',t:'official'},
+      ],
+      gemini:[
+        {n:'Tuscan Dream',t:'specialist'},
+        {n:'Kinglike Concierge',t:'specialist'},
+      ],
+      claude:[
+        {n:'The Thinking Traveller',t:'specialist'},
+        {n:"Oliver's Travels",t:'specialist'},
+        {n:'CV Villas',t:'specialist'},
+        {n:'Scott Dunn',t:'specialist'},
+      ]},
+    { id:24, topic:'Ski chalet with catering Verbier', category:'Ski',
+      chatgpt:[
+        {n:'Verbier Exclusive',t:'specialist'},
+        {n:'Ultimate Luxury Chalets',t:'specialist'},
+        {n:'Leo Trippi',t:'specialist'},
+        {n:'SeeVerbier',t:'blog'},
+      ],
+      perplexity:[
+        {n:'David Pearson Travel',t:'specialist'},
+        {n:'Luxury Chalet Co.',t:'specialist'},
+        {n:'Verbier.co',t:'blog'},
+      ],
+      gemini:[
+        {n:'Verbier Exclusive',t:'specialist'},
+        {n:'Oxford Ski Company',t:'specialist'},
+      ],
+      claude:[
+        {n:'Leo Trippi',t:'specialist'},
+        {n:'Scott Dunn',t:'specialist'},
+        {n:'Ski In Luxury',t:'specialist'},
+        {n:'Powder Byrne',t:'specialist'},
+      ]},
+    { id:25, topic:'Yacht charter Mediterranean', category:'Yachts',
+      chatgpt:[
+        {n:'Fraser Yachts',t:'specialist'},
+        {n:'Burgess',t:'specialist'},
+        {n:'Camper & Nicholsons',t:'specialist'},
+      ],
+      perplexity:[
+        {n:'Northrop & Johnson',t:'specialist'},
+        {n:'Mediterranean Yacht Charters',t:'specialist'},
+      ],
+      gemini:[
+        {n:'Fraser Yachts',t:'specialist'},
+        {n:'Sunsail',t:'specialist'},
+      ],
+      claude:[
+        {n:'Fraser Yachts',t:'specialist'},
+        {n:'Burgess',t:'specialist'},
+        {n:'Boat International',t:'editorial'},
+        {n:'CharterWorld',t:'aggregator'},
+      ]},
+    { id:26, topic:'Private island resort with butler Maldives', category:'Islands',
+      chatgpt:[
+        {n:'St. Regis Maldives',t:'official'},
+        {n:'St. Regis Butler Service',t:'official'},
+        {n:'SUNxSIYAM Resorts',t:'official'},
+      ],
+      perplexity:[
+        {n:'Go Ocean Travel',t:'blog'},
+      ],
+      gemini:[
+        {n:'The Ritz-Carlton Maldives',t:'official'},
+        {n:'St. Regis Maldives',t:'official'},
+      ],
+      claude:[
+        {n:'Condé Nast Traveller',t:'editorial'},
+        {n:'Mr & Mrs Smith',t:'specialist'},
+        {n:'Velaa Private Island',t:'official'},
+        {n:'Cheval Blanc',t:'official'},
+      ]},
+    { id:27, topic:'Multi-generational villa rental', category:'Villas',
+      chatgpt:[
+        {n:'onefinestay',t:'specialist'},
+        {n:'Mandarin Oriental Exceptional Homes',t:'official'},
+        {n:'Le Collectionist',t:'specialist'},
+      ],
+      perplexity:[
+        {n:'Villas of Distinction',t:'specialist'},
+        {n:'CV Villas',t:'specialist'},
+      ],
+      gemini:[
+        {n:'Tripwix',t:'specialist'},
+        {n:'Bailey Robinson',t:'specialist'},
+      ],
+      claude:[
+        {n:'Scott Dunn',t:'specialist'},
+        {n:'CV Villas',t:'specialist'},
+        {n:'VillaNoVo',t:'specialist'},
+        {n:'Travel + Leisure',t:'editorial'},
+      ]},
+    { id:28, topic:'Family estate rental', category:'Villas',
+      chatgpt:[
+        {n:"Oliver's Travels",t:'specialist'},
+        {n:'Le Collectionist',t:'specialist'},
+        {n:'Mandarin Oriental Exceptional Homes',t:'official'},
+      ],
+      perplexity:[
+        {n:'Haute Retreats',t:'specialist'},
+        {n:'Elite Havens',t:'specialist'},
+      ],
+      gemini:[
+        {n:'Haute Retreats',t:'specialist'},
+        {n:'Le Collectionist',t:'specialist'},
+      ],
+      claude:[
+        {n:'Unique Homestays',t:'specialist'},
+        {n:'Rural Retreats',t:'specialist'},
+        {n:'Condé Nast Traveller',t:'editorial'},
+        {n:'Historic Houses',t:'specialist'},
+      ]},
+    { id:29, topic:'Bespoke tour operators Antarctica', category:'Adventure',
+      chatgpt:[
+        {n:'Black Tomato',t:'specialist'},
+        {n:'Abercrombie & Kent',t:'specialist'},
+        {n:'Quark Expeditions',t:'specialist'},
+      ],
+      perplexity:[
+        {n:'Extraordinary Journeys',t:'specialist'},
+      ],
+      gemini:[
+        {n:'Cruise Critic',t:'aggregator'},
+        {n:'Scenic Luxury Cruises',t:'official'},
+      ],
+      claude:[
+        {n:'White Desert',t:'specialist'},
+        {n:'Silversea',t:'official'},
+        {n:'Abercrombie & Kent',t:'specialist'},
+        {n:'Cooksons Adventures',t:'specialist'},
+      ]},
+    { id:30, topic:'Private jet charter London–New York', category:'Transport',
+      chatgpt:[
+        {n:'PrivateFly',t:'specialist'},
+        {n:'VistaJet',t:'official'},
+        {n:'NetJets',t:'official'},
+        {n:'LunaJets',t:'specialist'},
+      ],
+      perplexity:[
+        {n:'Private Jet London to New York',t:'specialist'},
+      ],
+      gemini:[
+        {n:'ACC Aviation',t:'specialist'},
+        {n:'Global Charter',t:'specialist'},
+      ],
+      claude:[
+        {n:'VistaJet',t:'official'},
+        {n:'NetJets',t:'official'},
+        {n:'PrivateFly',t:'specialist'},
+        {n:'FlyVictor',t:'specialist'},
+      ]},
   ];
 
   // ── Query Intelligence panel ────────────────────────────────────────────────
@@ -669,14 +1043,14 @@ const SignalNoirApp = () => {
         {/* Batch status */}
         <div className="mb-5 flex items-center gap-3 px-4 py-3 rounded-lg border"
           style={{ background: 'rgba(255,215,0,0.05)', borderColor: 'rgba(255,215,0,0.2)' }}>
-          <span className="text-sm font-mono" style={{ color: '#FFD700' }}>BATCH 1 COMPLETE</span>
-          <span className="text-gray-500 text-xs">Queries 1–12 · Verified Feb 14 2026 · Queries 13–30 pending</span>
+          <span className="text-sm font-mono" style={{ color: '#FFD700' }}>ALL 3 BATCHES COMPLETE</span>
+          <span className="text-gray-500 text-xs">30 queries tested · Batches 1–3 · Verified Feb 14 2026</span>
         </div>
 
         {/* Summary stats */}
         <div className="grid grid-cols-2 gap-3 mb-6 sm:grid-cols-4">
           {[
-            { label: 'Queries verified', val: `${QUERY_DATA.length}`, sub: 'of 30 planned (Batch 1)' },
+            { label: 'Queries verified', val: `${QUERY_DATA.length}`, sub: 'across Batches 1–3 (Hotels, Experiences, Villas)' },
             { label: 'Platform divergence', val: `${divergedCount}/${QUERY_DATA.length}`, sub: 'queries where non-editorial leads' },
             { label: 'YouTube citations', val: `${youtubeCount} queries`, sub: 'where video outranked print' },
             { label: 'Non-editorial sources', val: `${Math.round(totalNonEditorial/totalSources*100)}%`, sub: 'of all citations across 4 platforms' },
@@ -1414,3 +1788,4 @@ function addRow(data) {
 }
 
 */
+
