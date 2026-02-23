@@ -1063,6 +1063,34 @@ const SignalNoirApp = () => {
           ))}
         </div>
 
+        {/* Insight: Why 4 queries converged */}
+        <div className="rounded-lg p-4 mb-5" style={{ background: 'rgba(255,215,0,0.05)', border: '1px solid rgba(255,215,0,0.2)' }}>
+          <div className="flex items-start gap-3">
+            <span style={{ color: '#FFD700', fontSize: 18 }}>◎</span>
+            <div>
+              <div className="text-sm font-semibold mb-1" style={{ color: '#FFD700' }}>
+                Why 4/30 queries showed platform consensus
+              </div>
+              <div className="text-xs text-gray-400 mb-3">
+                The 4 queries where all platforms agreed share one trait: dominant, unambiguous editorial authority or a single known operator. When there's a clear "correct" answer, AI platforms converge. When a category is competitive or fragmented, they diverge — and that divergence is where your clients are losing AI visibility.
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { q: 'Luxury hotel Dubai', why: 'Condé Nast + Forbes dominate across all platforms' },
+                  { q: 'Luxury hotel Lake Como', why: 'Strong premium editorial consensus (Vogue, Forbes, W50Best)' },
+                  { q: 'Luxury hotel Kyoto', why: 'Premium editorial led on 3 of 4 platforms' },
+                  { q: 'Venice Simplon Orient Express', why: 'Single operator (Belmond) + consistent editorial coverage' },
+                ].map(({ q, why }) => (
+                  <div key={q} className="rounded px-3 py-2 text-xs" style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.15)' }}>
+                    <div style={{ color: '#FFD700' }} className="font-medium">{q}</div>
+                    <div className="text-gray-500 mt-0.5">{why}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Legend */}
         <div className="flex flex-wrap gap-2 mb-5">
           {Object.entries(SOURCE_TYPES).map(([k,v]) => (
@@ -1788,4 +1816,3 @@ function addRow(data) {
 }
 
 */
-
