@@ -103,12 +103,17 @@ function getQuadrantKey(x, y) {
 }
 
 // Inline SVG funnel
+const FUNNEL_TEXT_Y   = [29,  93,  156, 217]
+const FUNNEL_SUB_Y    = [43,  107, 170, 231]
+const FUNNEL_TEXT_CLR = ['#3C3489', '#3C3489', '#26215C', '#ffffff']
+const FUNNEL_SUB_CLR  = ['#534AB7', '#534AB7', '#534AB7', '#CECBF6']
+
 function Funnel() {
   return (
     <svg viewBox="0 0 240 275" width="100%" style={{ display: 'block' }}>
       {FUNNEL_STAGES.map((stage, i) => {
-        const cy = i * 63 + (i === 0 ? 34 : i === 1 ? 97 : i === 2 ? 160 : 221)
-        const subY = cy + 14
+        const cy   = FUNNEL_TEXT_Y[i]
+        const subY = FUNNEL_SUB_Y[i]
         return (
           <g key={stage.label}>
             <polygon
@@ -118,9 +123,6 @@ function Funnel() {
                 stroke: 'rgba(100,100,100,0.15)',
                 strokeWidth: 0.5,
               }}
-              className="sn-funnel-polygon"
-              data-dark-fill={stage.darkFill}
-              data-light-fill={stage.lightFill}
             />
             <text
               x="120"
@@ -129,8 +131,7 @@ function Funnel() {
               fontSize="11"
               fontWeight="500"
               fontFamily="inherit"
-              style={{ fill: stage.textColor || 'inherit' }}
-              className={stage.textColor ? '' : 'sn-funnel-text'}
+              style={{ fill: FUNNEL_TEXT_CLR[i] }}
             >
               {stage.label}
             </text>
@@ -140,9 +141,7 @@ function Funnel() {
               textAnchor="middle"
               fontSize="9"
               fontFamily="inherit"
-              opacity={stage.textColor ? 1 : 0.7}
-              style={{ fill: stage.subColor || (stage.textColor ? stage.subColor : 'inherit') }}
-              className={stage.textColor ? '' : 'sn-funnel-text'}
+              style={{ fill: FUNNEL_SUB_CLR[i] }}
             >
               {stage.sub}
             </text>
