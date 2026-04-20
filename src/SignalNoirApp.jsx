@@ -3,7 +3,7 @@ import DecisionInfluenceMatrix from './DecisionInfluenceMatrix';
 
 // ============================================
 // SETUP INSTRUCTIONS
-// ============================================
+// ===========================================
 // 1. Open your Google Sheet
 // 2. Go to Extensions > Apps Script
 // 3. Delete any code there and paste the code from the APPS_SCRIPT section below
