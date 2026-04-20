@@ -1740,10 +1740,39 @@ const SignalNoirApp = () => {
                     );
                   })}
                 </div>
-              </div>
-            )}
-          </>
-        )}
+            {publications.length > 0 && (() => {
+              const [matrixPub, setMatrixPub] = React.useState(null);
+              const pub = matrixPub
+                ? sortedPublications.find(p => p.id === parseInt(matrixPub))
+                : sortedPublications[0];
+              if (!pub) return null;
+              return (
+                <div className="mt-6 bg-gray-900/50 rounded-lg border border-gray-800 p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm text-gray-500 uppercase tracking-wider">Decision Influence Matrix</h3>
+                    <select
+                      value={matrixPub || sortedPublications[0]?.id}
+                      onChange={e => setMatrixPub(e.target.value)}
+                      className="bg-gray-800 border border-gray-700 text-gray-300 text-xs rounded px-3 py-1.5 focus:outline-none">
+                      {sortedPublications.map(p => (
+                        <option key={p.id} value={p.id}>{p.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <DecisionInfluenceMatrix
+                    brandName={pub.name}
+                    scores={{
+                      d1: pub.scores.authority / 10,
+                      d2: pub.scores.aiCitations / 10,
+                      d3: pub.scores.content / 10,
+                      d4: pub.scores.topical / 10,
+                      d5: pub.scores.search / 10,
+                      d6: pub.scores.social / 10
+                    }}
+                  />
+                </div>
+              );
+            })()}
 
         <div className="mt-8 text-center text-xs text-gray-700">
           <p>SIGNAL NOIR™ is a proprietary framework owned by Make Lemonade Fizz.</p>
