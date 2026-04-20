@@ -170,7 +170,7 @@ function Funnel() {
 // 2×2 matrix grid + animated dot
 function Matrix({ xPct, yPct }) {
   return (
-    <div style={{ flex: 1, minWidth: 0 }}>
+    <div style={{ width: '100%' }}>
       {/* Y axis header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
         <span style={{ fontSize: 8.5, color: 'rgba(150,150,150,0.8)' }}>Strong</span>
@@ -186,7 +186,7 @@ function Matrix({ xPct, yPct }) {
           border: '0.5px solid rgba(150,150,150,0.3)',
           borderRadius: 8,
           overflow: 'hidden',
-          aspectRatio: '1',
+          minHeight: 260,
         }}
       >
         <div
@@ -194,7 +194,7 @@ function Matrix({ xPct, yPct }) {
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gridTemplateRows: '1fr 1fr',
-            height: '100%',
+            minHeight: 260,
           }}
         >
           {/* Top-left */}
@@ -289,29 +289,23 @@ export default function DecisionInfluenceMatrix({ scores = {}, brandName }) {
         </div>
       </div>
 
-      {/* Main visualization row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        {/* Funnel */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <Funnel />
-        </div>
-
-        {/* Connector */}
-        <div style={{ width: 56, flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-          <div style={{ fontSize: 8.5, opacity: 0.5, textAlign: 'center', lineHeight: 1.4 }}>
-            Funnel shows how influence is created
-          </div>
-          <svg width="18" height="12" viewBox="0 0 18 12">
-            <path d="M1 6 L15 6 M10 2 L15 6 L10 10" fill="none" stroke="rgba(150,150,150,0.5)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <div style={{ fontSize: 8.5, opacity: 0.5, textAlign: 'center', lineHeight: 1.4 }}>
-            Matrix shows where you stand
-          </div>
-        </div>
-
-        {/* Matrix */}
-        <Matrix xPct={x} yPct={y} />
+      {/* Funnel — full width */}
+      <div style={{ maxWidth: 480, margin: '0 auto 8px' }}>
+        <Funnel />
       </div>
+
+      {/* Connector */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, margin: '0 0 8px' }}>
+        <svg width="18" height="16" viewBox="0 0 18 16">
+          <path d="M9 1 L9 13 M5 9 L9 13 L13 9" fill="none" stroke="rgba(150,150,150,0.5)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <div style={{ fontSize: 8.5, opacity: 0.5, textAlign: 'center', lineHeight: 1.4 }}>
+          Matrix shows where you stand
+        </div>
+      </div>
+
+      {/* Matrix — full width */}
+      <Matrix xPct={x} yPct={y} />
 
       {/* Anchor line */}
       <div
